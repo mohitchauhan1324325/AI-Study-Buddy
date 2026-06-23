@@ -12,8 +12,9 @@ router.post("/save-score", async (req, res) => {
 
     await docClient.send(
       new PutCommand({
-        TableName: "QuizResults",
+        TableName: "Users",
         Item: {
+          id: crypto.randomUUID(),
           userId,
           score,
           createdAt: Date.now(),
@@ -21,7 +22,7 @@ router.post("/save-score", async (req, res) => {
       })
     );
 
-    res.json({ success: true });
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
