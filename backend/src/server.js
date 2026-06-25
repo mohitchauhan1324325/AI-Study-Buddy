@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import testRoute from "./routes/testRoute.js";
+import userRouter from "./routes/userRoute.js";
 import cors from "cors";
 
 const app = express();
@@ -17,7 +17,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-app.use("/api", testRoute);
+app.use("/api", userRouter);
 
 app.listen(5000, () => {
   console.log("Server running");
