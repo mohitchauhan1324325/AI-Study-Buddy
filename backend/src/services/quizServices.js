@@ -88,6 +88,7 @@ export const checkQuiz = async (quiz) => {
         new PutCommand({
             TableName: "QuizResults",
             Item: {
+                id: crypto.randomUUID(),  
                 userId,
                 quizId: crypto.randomUUID(),
                 level,
