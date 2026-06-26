@@ -1,5 +1,6 @@
 import express from "express";
 import { fetchQuiz, postQuiz } from "../services/quizServices.js";
+import { checkQuiz } from "../services/quizServices.js";
 
 export const saveQuiz = async (req, res) => {
     try {
@@ -18,9 +19,9 @@ export const saveQuiz = async (req, res) => {
 
 export const getQuiz = async (req, res) => {
     try {
-        const{ level } = req.params;
+        const { level } = req.params;
         console.log("level: ", level);
-        
+
         const data = await fetchQuiz(level);
 
         res.status(200).json({
@@ -36,4 +37,22 @@ export const getQuiz = async (req, res) => {
             message: error.message,
         });
     }
-}
+};
+
+export const submitQuiz = async (req, res) => {
+    try {
+        const result = await checkQuiz(req.body);
+
+        res.status(200).json({
+            success: true,
+            ...result,
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
