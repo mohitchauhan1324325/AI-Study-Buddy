@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Quiz from './pages/Quiz'
 import AITutor from './pages/AITutor'
 import Dashboard from './pages/Dashboard'
+import StudyPlan from "./pages/StudyPlan";
 
 function App() {
   return (
@@ -40,6 +41,13 @@ function App() {
               </Link>
 
               <Link
+                to="/study-plan"
+                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
+              >
+                Study Plan
+              </Link>
+
+              <Link
                 to="/ai-tutor"
                 className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
               >
@@ -56,6 +64,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/ai-tutor" element={<AITutor />} />
+            <Route path="/study-plan" element={<StudyPlan />} />
             <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>

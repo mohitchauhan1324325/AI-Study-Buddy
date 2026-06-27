@@ -1,4 +1,23 @@
-import { askAI } from "../services/aiServices.js";
+import { askAI, generateStudyPlan } from "../services/aiServices.js";
+
+export const createStudyPlan = async (req, res) => {
+  try {
+    const plan = await generateStudyPlan(req.body);
+
+    res.status(200).json({
+      success: true,
+      plan,
+    });
+    
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 export const chat = async (req, res) => {
   try {
