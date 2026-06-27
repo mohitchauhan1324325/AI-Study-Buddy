@@ -5,6 +5,7 @@ import express from "express";
 import userRouter from "./routes/userRoute.js";
 import quizRouter from "./routes/quizRoute.js";
 import cors from "cors";
+import aiRoutes from "./routes/aiRoute.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use("/api", userRouter);
 app.use("/api", quizRouter);
+app.use("/api/ai", aiRoutes);
 
 app.listen(5000, () => {
   console.log("Server running");
