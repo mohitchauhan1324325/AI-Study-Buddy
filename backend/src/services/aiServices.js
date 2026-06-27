@@ -1,20 +1,14 @@
-import client from "../config/openai.js";
+import client from "../config/gemini.js";
 
 export const askAI = async (message) => {
-  const response = await client.chat.completions.create({
-    model: "gpt-4.1-mini",
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are an expert JLPT Japanese tutor. Explain vocabulary, grammar, kanji, and sentence structure in simple English.",
-      },
-      {
-        role: "user",
-        content: message,
-      },
-    ],
-  });
+    const response = await client.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: `
+        You are an expert JLPT Japanese tutor.
+        Explain Japanese grammar, vocabulary, kanji and sentence structure in simple English.
+        User Question:
+        ${message}`,
+    });
 
-  return response.choices[0].message.content;
+    return response.text;
 };
