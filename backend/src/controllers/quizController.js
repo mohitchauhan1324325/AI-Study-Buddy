@@ -1,6 +1,31 @@
 import express from "express";
 import { fetchQuiz, postQuiz } from "../services/quizServices.js";
 import { checkQuiz } from "../services/quizServices.js";
+import { getDashboard } from "../services/quizServices.js";
+
+export const dashboard = async (req, res) => {
+    try {
+
+        const { userId } = req.params;
+
+        const result = await getDashboard(userId);
+
+        res.json({
+            success: true,
+            dashboard: result,
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+
+    }
+};
 
 export const saveQuiz = async (req, res) => {
     try {

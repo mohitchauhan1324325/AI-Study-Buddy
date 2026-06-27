@@ -26,3 +26,11 @@ export const submitQuiz = async (data) => {
     throw error;
   }
 };
+
+export const getDashboard = async (userId) => {
+  const res = await api.get(
+    `/api/dashboard/${userId}`
+  );
+
+  return res.data;
+};

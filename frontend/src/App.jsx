@@ -9,15 +9,45 @@ function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-        <header className="border-b bg-white/80 dark:bg-gray-800/80 backdrop-blur sticky top-0 z-10">
-          <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-            <Link to="/" className="text-xl font-semibold">AI Study Buddy</Link>
-            <nav className="flex gap-3">
-              <Link to="/" className="px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Home</Link>
-              <Link to="/quiz" className="px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Quiz</Link>
-              <Link to="/ai-tutor" className="px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">AI Tutor</Link>
-              <Link to="/dashboard" className="px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</Link>
+        <header className="bg-white shadow-md sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+
+            <h1 className="text-2xl font-bold text-blue-700">
+              🇯🇵 AI Study Buddy
+            </h1>
+
+            <nav className="flex gap-4">
+
+              <Link
+                to="/"
+                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
+              >
+                Home
+              </Link>
+
+              <Link
+                to="/quiz"
+                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
+              >
+                Quiz
+              </Link>
+
+              <Link
+                to="/dashboard"
+                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
+              >
+                Dashboard
+              </Link>
+
+              <Link
+                to="/ai-tutor"
+                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
+              >
+                AI Tutor
+              </Link>
+
             </nav>
+
           </div>
         </header>
 
