@@ -1,5 +1,5 @@
 import express from "express";
-import { user } from "../services/userServices.js";
+import { user } from "../services/authServices.js";
 
 export const saveUser = async (req, res) => {
     try {

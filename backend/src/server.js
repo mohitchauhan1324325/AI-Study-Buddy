@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-import userRouter from "./routes/userRoute.js";
+import userRouter from "./routes/authRoute.js";
 import quizRouter from "./routes/quizRoute.js";
 import cors from "cors";
 import aiRoutes from "./routes/aiRoute.js";
