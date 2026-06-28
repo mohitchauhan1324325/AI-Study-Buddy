@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await getDashboard("mohit123");
+      const res = await getDashboard();
       setDashboard(res.dashboard);
     } catch (error) {
       console.log(error);
@@ -261,8 +261,6 @@ export default function Dashboard() {
           </div>
 
         </div>
-
-
 
                 {/* Recent Quizzes */}
 

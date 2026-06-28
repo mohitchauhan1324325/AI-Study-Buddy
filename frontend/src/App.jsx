@@ -1,76 +1,176 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import Home from './pages/Home'
-import Quiz from './pages/Quiz'
-import AITutor from './pages/AITutor'
-import Dashboard from './pages/Dashboard'
+import React from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import Home from "./pages/Home";
+import Quiz from "./pages/Quiz";
+import Dashboard from "./pages/Dashboard";
+import AITutor from "./pages/AITutor";
 import StudyPlan from "./pages/StudyPlan";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-function App() {
+import PrivateRoute from "./components/PrivateRoute";
+import { isAuthenticated, logout } from "./api/auth";
+
+function Layout() {
+  const navigate = useNavigate();
+
+  const authenticated = isAuthenticated();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-        <header className="bg-white shadow-md sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
 
-            <h1 className="text-2xl font-bold text-blue-700">
-              🇯🇵 AI Study Buddy
-            </h1>
+      {/* Navbar */}
+      <header className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 shadow-lg">
 
-            <nav className="flex gap-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
 
-              <Link
-                to="/"
-                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
-              >
-                Home
-              </Link>
+          {/* Logo */}
+          <Link
+            to="/"
+            className="text-2xl font-bold text-blue-400 hover:text-blue-300 transition"
+          >
+            🇯🇵 AI Study Buddy
+          </Link>
 
-              <Link
-                to="/quiz"
-                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
-              >
-                Quiz
-              </Link>
+          {/* Navigation */}
+          <nav className="flex items-center gap-3">
 
-              <Link
-                to="/dashboard"
-                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
-              >
-                Dashboard
-              </Link>
+            <Link
+              to="/"
+              className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+            >
+              Home
+            </Link>
 
-              <Link
-                to="/study-plan"
-                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
-              >
-                Study Plan
-              </Link>
+            {authenticated ? (
+              <>
+                <Link
+                  to="/quiz"
+                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+                >
+                  Quiz
+                </Link>
 
-              <Link
-                to="/ai-tutor"
-                className="px-4 py-2 rounded-lg hover:bg-blue-100 font-medium text-gray-700"
-              >
-                AI Tutor
-              </Link>
+                <Link
+                  to="/dashboard"
+                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+                >
+                  Dashboard
+                </Link>
 
-            </nav>
+                <Link
+                  to="/study-plan"
+                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+                >
+                  Study Plan
+                </Link>
 
-          </div>
-        </header>
+                <Link
+                  to="/ai-tutor"
+                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+                >
+                  AI Tutor
+                </Link>
 
-        <main className="max-w-5xl mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/ai-tutor" element={<AITutor />} />
-            <Route path="/study-plan" element={<StudyPlan />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
-  )
+                <button
+                  onClick={handleLogout}
+                  className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/register"
+                  className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+
+          </nav>
+        </div>
+      </header>
+
+      {/* Pages */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+
+        <Routes>
+
+          <Route path="/" element={<Home />} />
+
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/quiz"
+            element={
+              <PrivateRoute>
+                <Quiz />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/study-plan"
+            element={
+              <PrivateRoute>
+                <StudyPlan />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/ai-tutor"
+            element={
+              <PrivateRoute>
+                <AITutor />
+              </PrivateRoute>
+            }
+          />
+
+        </Routes>
+
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Layout />
+    </BrowserRouter>
+  );
+}

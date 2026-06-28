@@ -31,16 +31,16 @@ export const getDashboard = async (userId) => {
     const averageScore =
         quizzes.length > 0
             ? (
-                  quizzes.reduce(
-                      (sum, quiz) => sum + quiz.score,
-                      0
-                  ) / quizzes.length
-              ).toFixed(2)
+                quizzes.reduce(
+                    (sum, quiz) => sum + quiz.score,
+                    0
+                ) / quizzes.length
+            ).toFixed(2)
             : 0;
 
-    quizzes.sort(
-        (a, b) => b.submittedAt - a.submittedAt
-    );
+    quizzes.sort((a, b) => {
+        return Number(b.submittedAt) - Number(a.submittedAt);
+    });
 
     return {
         totalQuizzes,
@@ -95,8 +95,7 @@ export const fetchQuiz = async (level) => {
     return await docClient.send(command);
 };
 
-export const checkQuiz = async (quiz) => {
-    const { userId, level, answers } = quiz;
+export const checkQuiz = async ({ userId, level, answers }) => {
 
     const result = await docClient.send(
         new QueryCommand({

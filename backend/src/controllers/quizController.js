@@ -6,7 +6,7 @@ import { getDashboard } from "../services/quizServices.js";
 export const dashboard = async (req, res) => {
     try {
 
-        const { userId } = req.params;
+        const userId = req.user.email;
 
         const result = await getDashboard(userId);
 
@@ -66,7 +66,14 @@ export const getQuiz = async (req, res) => {
 
 export const submitQuiz = async (req, res) => {
     try {
-        const result = await checkQuiz(req.body);
+        const userId = req.user.email;
+        const { level, answers } = req.body;
+
+        const result = await checkQuiz({
+            userId,
+            level,
+            answers
+        });
 
         res.status(200).json({
             success: true,

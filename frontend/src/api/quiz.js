@@ -27,10 +27,8 @@ export const submitQuiz = async (data) => {
   }
 };
 
-export const getDashboard = async (userId) => {
-  const res = await api.get(
-    `/api/dashboard/${userId}`
-  );
+export const getDashboard = async () => {
+  const res = await api.get("/api/dashboard");
 
   return res.data;
 };

@@ -69,7 +69,6 @@ export default function Quiz() {
   const handleSubmit = async () => {
     try {
       const payload = {
-        userId: "mohit123",
         level: "N5",
         answers,
       };
