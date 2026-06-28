@@ -6,6 +6,7 @@ import userRouter from "./routes/authRoute.js";
 import quizRouter from "./routes/quizRoute.js";
 import cors from "cors";
 import aiRoutes from "./routes/aiRoute.js";
+import authRoutes from "./routes/authRoute.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ const PORT = process.env.PORT || 5000;
 app.use("/api", userRouter);
 app.use("/api", quizRouter);
 app.use("/api/ai", aiRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(5000, () => {
   console.log("Server running");
