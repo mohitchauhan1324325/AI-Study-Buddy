@@ -50,78 +50,25 @@ export const getDashboard = async (userId) => {
     };
 };
 
-export const postQuiz = async (quizData) => {
-
-    const {
-        level,
-        question,
-        options,
-        correctAnswer,
-        explanation,
-        category,
-    } = quizData;
-
-    const questionId = crypto.randomUUID();
-
-    const command = new PutCommand({
-        TableName: "QuizQuestions",
-        Item: {
-            level,
-            questionId,
-            question,
-            options,
-            correctAnswer,
-            explanation,
-            category,
-            createdAt: new Date().toISOString(),
-        },
-    });
-
-    return await docClient.send(command);
-};
-
-export const fetchQuiz = async (level) => {
-
-    const command = new QueryCommand({
-        TableName: "QuizQuestions",
-        KeyConditionExpression: "#level = :level",
-        ExpressionAttributeNames: {
-            "#level": "level",
-        },
-        ExpressionAttributeValues: {
-            ":level": level,
-        },
-    });
-    return await docClient.send(command);
-};
-
-export const checkQuiz = async ({ userId, level, answers }) => {
-
-    const result = await docClient.send(
-        new QueryCommand({
-            TableName: "QuizQuestions",
-            KeyConditionExpression: "#level = :level",
-            ExpressionAttributeNames: {
-                "#level": "level",
-            },
-            ExpressionAttributeValues: {
-                ":level": level,
-            },
-        })
-    );
-
-    const questions = result.Items;
+export const checkQuiz = async ({
+    userId,
+    level,
+    questions,
+    answers,
+}) => {
 
     const questionMap = {};
 
-    questions.forEach((question) => {
-        questionMap[question.questionId] = question;
+    questions.forEach((q) => {
+        questionMap[q.questionId] = q;
     });
 
     let score = 0;
+
     const review = [];
 
     answers.forEach((answer) => {
+
         const question = questionMap[answer.questionId];
 
         if (!question) return;
@@ -129,9 +76,7 @@ export const checkQuiz = async ({ userId, level, answers }) => {
         const isCorrect =
             question.correctAnswer === answer.selectedAnswer;
 
-        if (isCorrect) {
-            score++;
-        }
+        if (isCorrect) score++;
 
         review.push({
             questionId: question.questionId,
@@ -139,36 +84,56 @@ export const checkQuiz = async ({ userId, level, answers }) => {
             options: question.options,
             userAnswer: answer.selectedAnswer,
             correctAnswer: question.correctAnswer,
-            explanation: question.explanation || "",
+            explanation: question.explanation,
             isCorrect,
         });
+
     });
 
     await docClient.send(
-        new PutCommand({
-            TableName: "QuizResults",
-            Item: {
-                id: crypto.randomUUID(),
-                userId,
-                quizId: crypto.randomUUID(),
-                level,
-                score,
-                totalQuestions: answers.length,
-                submittedAt: Date.now(),
-            },
-        })
-    );
 
-    const percentage = Number(
-        ((score / answers.length) * 100).toFixed(2)
+        new PutCommand({
+
+            TableName: "QuizResults",
+
+            Item: {
+
+                id: crypto.randomUUID(),
+
+                quizId: crypto.randomUUID(),
+
+                userId,
+
+                level,
+
+                score,
+
+                totalQuestions: answers.length,
+
+                submittedAt: Date.now(),
+
+            },
+
+        })
+
     );
 
     return {
+
         score,
+
         totalQuestions: answers.length,
-        percentage,
+
+        percentage: Number(
+            ((score / answers.length) * 100).toFixed(2)
+        ),
+
         correct: score,
+
         incorrect: answers.length - score,
+
         review,
+
     };
+
 };

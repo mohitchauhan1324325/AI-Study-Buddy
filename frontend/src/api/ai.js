@@ -16,3 +16,9 @@ export const generateStudyPlan = async (data) => {
     throw error;
   }
 };
+
+export const generateQuiz = async (data) => {
+  const res = await api.post("/api/ai/quiz/generate", data);
+
+  return res.data;
+};

@@ -14,6 +14,7 @@ import AITutor from "./pages/AITutor";
 import StudyPlan from "./pages/StudyPlan";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import QuizSetup from "./pages/QuizSetup";
 
 import PrivateRoute from "./components/PrivateRoute";
 import { isAuthenticated, logout } from "./api/auth";
@@ -57,7 +58,7 @@ function Layout() {
             {authenticated ? (
               <>
                 <Link
-                  to="/quiz"
+                  to="/quiz/setup"
                   className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
                 >
                   Quiz
@@ -132,6 +133,15 @@ function Layout() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/quiz/setup"
+            element={
+              <PrivateRoute>
+                <QuizSetup />
+              </PrivateRoute>
+            }
+          />
+
 
           <Route
             path="/dashboard"

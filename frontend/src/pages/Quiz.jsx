@@ -1,9 +1,20 @@
 import { useEffect, useState } from "react";
-import { getQuiz, submitQuiz } from "../api/quiz";
-import QuizResult from "../components/QuizResult";
-import QuizContent from "../components/QuizContent";
+import { submitQuiz } from "../api/quiz.js";
+import QuizResult from "../components/QuizResult.jsx";
+import QuizContent from "../components/QuizContent.jsx";
+import { useSearchParams } from "react-router-dom";
+import { generateQuiz } from "../api/ai.js";
 
 export default function Quiz() {
+
+
+
+  const [searchParams] = useSearchParams();
+
+  const level = searchParams.get("level");
+  const category = searchParams.get("category");
+  const count = Number(searchParams.get("count"));
+
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -32,8 +43,17 @@ export default function Quiz() {
 
   const fetchQuestions = async () => {
     try {
-      const res = await getQuiz("N5");
-      setQuestions(res.questions);
+      const res = await generateQuiz({
+        level,
+        category,
+        count,
+      });
+      const questions = res.questions.map((q, index) => ({
+        ...q,
+        questionId: index + 1,
+      }));
+
+      setQuestions(questions);
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,9 +91,10 @@ export default function Quiz() {
   const handleSubmit = async () => {
     try {
       const payload = {
-        level: "N5",
+        level,
+        questions,
         answers,
-      };
+      }
 
       const res = await submitQuiz(payload);
       setResult(res);

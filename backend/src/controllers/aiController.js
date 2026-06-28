@@ -1,4 +1,4 @@
-import { askAI, generateStudyPlan } from "../services/aiServices.js";
+import { askAI, generateQuizAI, generateStudyPlan } from "../services/aiServices.js";
 
 export const createStudyPlan = async (req, res) => {
   try {
@@ -28,6 +28,24 @@ export const chat = async (req, res) => {
     res.json({
       success: true,
       reply,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const generateQuiz = async (req, res) => {
+  try {
+    const questions = await generateQuizAI(req.body);
+
+    res.json({
+      success: true,
+      questions,
     });
   } catch (error) {
     console.log(error);

@@ -60,3 +60,49 @@ export const askAI = async (message) => {
 
     return response.text;
 };
+
+export const generateQuizAI = async ({
+    level,
+    category,
+    count,
+}) => {
+    const response = await client.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: `
+You are a JLPT examiner.
+
+Generate ${count} JLPT ${level} multiple choice questions.
+
+Category: ${category}
+
+Rules:
+
+- Exactly 4 options
+- Exactly one correct answer
+- Add a short explanation
+- Difficulty should match ${level}
+- Return ONLY valid JSON
+- Do not add markdown or \`\`\`
+
+JSON format:
+
+[
+  {
+    "question":"...",
+    "options":["A","B","C","D"],
+    "correctAnswer":"...",
+    "explanation":"..."
+  }
+]
+`,
+    });
+
+    const text = response.text;
+
+    const clean = text
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+    return JSON.parse(clean);
+};
