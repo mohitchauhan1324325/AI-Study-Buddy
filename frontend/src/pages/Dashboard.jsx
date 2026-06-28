@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../api/quiz";
+import { getUserId } from "../utils/user";
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -10,7 +11,7 @@ export default function Dashboard() {
 
   const fetchDashboard = async () => {
     try {
-      const res = await getDashboard();
+      const res = await getDashboard(getUserId());
       setDashboard(res.dashboard);
     } catch (error) {
       console.log(error);

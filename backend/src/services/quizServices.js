@@ -1,14 +1,17 @@
-import express from "express";
-import { PutCommand, QueryCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import {
+    PutCommand,
+    ScanCommand,
+    DynamoDBDocumentClient,
+} from "@aws-sdk/lib-dynamodb";
+
 import client from "../config/dynamoDB.js";
 import crypto from "crypto";
-import { Condition$ } from "@aws-sdk/client-dynamodb";
-import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 const docClient = DynamoDBDocumentClient.from(client);
 
-export const getDashboard = async (userId) => {
+// ================= Dashboard =================
 
+export const getDashboard = async (userId) => {
     const result = await docClient.send(
         new ScanCommand({
             TableName: "QuizResults",
@@ -21,6 +24,10 @@ export const getDashboard = async (userId) => {
 
     const quizzes = result.Items || [];
 
+    quizzes.sort(
+        (a, b) => Number(b.submittedAt) - Number(a.submittedAt)
+    );
+
     const totalQuizzes = quizzes.length;
 
     const highestScore =
@@ -30,17 +37,13 @@ export const getDashboard = async (userId) => {
 
     const averageScore =
         quizzes.length > 0
-            ? (
-                quizzes.reduce(
-                    (sum, quiz) => sum + quiz.score,
-                    0
-                ) / quizzes.length
-            ).toFixed(2)
+            ? Number(
+                (
+                    quizzes.reduce((sum, quiz) => sum + quiz.score, 0) /
+                    quizzes.length
+                ).toFixed(2)
+            )
             : 0;
-
-    quizzes.sort((a, b) => {
-        return Number(b.submittedAt) - Number(a.submittedAt);
-    });
 
     return {
         totalQuizzes,
@@ -50,25 +53,24 @@ export const getDashboard = async (userId) => {
     };
 };
 
+// ================= Submit Quiz =================
+
 export const checkQuiz = async ({
     userId,
     level,
     questions,
     answers,
 }) => {
-
     const questionMap = {};
 
-    questions.forEach((q) => {
-        questionMap[q.questionId] = q;
+    questions.forEach((question) => {
+        questionMap[question.questionId] = question;
     });
 
     let score = 0;
-
     const review = [];
 
     answers.forEach((answer) => {
-
         const question = questionMap[answer.questionId];
 
         if (!question) return;
@@ -87,53 +89,33 @@ export const checkQuiz = async ({
             explanation: question.explanation,
             isCorrect,
         });
-
     });
 
     await docClient.send(
-
         new PutCommand({
-
             TableName: "QuizResults",
-
             Item: {
-
                 id: crypto.randomUUID(),
-
                 quizId: crypto.randomUUID(),
-
                 userId,
-
                 level,
-
                 score,
-
-                totalQuestions: answers.length,
-
+                totalQuestions: questions.length,
                 submittedAt: Date.now(),
-
             },
-
         })
-
     );
 
+    const totalQuestions = questions.length;
+
     return {
-
         score,
-
-        totalQuestions: answers.length,
-
+        totalQuestions,
         percentage: Number(
-            ((score / answers.length) * 100).toFixed(2)
+            ((score / totalQuestions) * 100).toFixed(2)
         ),
-
         correct: score,
-
-        incorrect: answers.length - score,
-
+        incorrect: totalQuestions - score,
         review,
-
     };
-
 };

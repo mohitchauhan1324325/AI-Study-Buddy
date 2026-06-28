@@ -4,6 +4,7 @@ import QuizResult from "../components/QuizResult.jsx";
 import QuizContent from "../components/QuizContent.jsx";
 import { useSearchParams } from "react-router-dom";
 import { generateQuiz } from "../api/ai.js";
+import { getUserId } from "../utils/user";
 
 export default function Quiz() {
 
@@ -91,10 +92,11 @@ export default function Quiz() {
   const handleSubmit = async () => {
     try {
       const payload = {
+        userId: getUserId(),
         level,
         questions,
         answers,
-      }
+      };
 
       const res = await submitQuiz(payload);
       setResult(res);
