@@ -12,22 +12,10 @@ import Quiz from "./pages/Quiz";
 import Dashboard from "./pages/Dashboard";
 import AITutor from "./pages/AITutor";
 import StudyPlan from "./pages/StudyPlan";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import QuizSetup from "./pages/QuizSetup";
-
-import PrivateRoute from "./components/PrivateRoute";
-import { isAuthenticated, logout } from "./api/auth";
 
 function Layout() {
   const navigate = useNavigate();
-
-  const authenticated = isAuthenticated();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -55,60 +43,36 @@ function Layout() {
               Home
             </Link>
 
-            {authenticated ? (
-              <>
-                <Link
-                  to="/quiz/setup"
-                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
-                >
-                  Quiz
-                </Link>
+            <>
+              <Link
+                to="/quiz/setup"
+                className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+              >
+                Quiz
+              </Link>
 
-                <Link
-                  to="/dashboard"
-                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
-                >
-                  Dashboard
-                </Link>
+              <Link
+                to="/dashboard"
+                className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+              >
+                Dashboard
+              </Link>
 
-                <Link
-                  to="/study-plan"
-                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
-                >
-                  Study Plan
-                </Link>
+              <Link
+                to="/study-plan"
+                className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+              >
+                Study Plan
+              </Link>
 
-                <Link
-                  to="/ai-tutor"
-                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
-                >
-                  AI Tutor
-                </Link>
+              <Link
+                to="/ai-tutor"
+                className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
+              >
+                AI Tutor
+              </Link>
 
-                <button
-                  onClick={handleLogout}
-                  className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 rounded-lg hover:bg-slate-800 transition"
-                >
-                  Login
-                </Link>
-
-                <Link
-                  to="/register"
-                  className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition"
-                >
-                  Register
-                </Link>
-              </>
-            )}
+            </>
 
           </nav>
         </div>
@@ -121,24 +85,16 @@ function Layout() {
 
           <Route path="/" element={<Home />} />
 
-          <Route path="/login" element={<Login />} />
-
-          <Route path="/register" element={<Register />} />
-
           <Route
             path="/quiz"
             element={
-              <PrivateRoute>
-                <Quiz />
-              </PrivateRoute>
+              <Quiz />
             }
           />
           <Route
             path="/quiz/setup"
             element={
-              <PrivateRoute>
-                <QuizSetup />
-              </PrivateRoute>
+              <QuizSetup />
             }
           />
 
@@ -146,32 +102,24 @@ function Layout() {
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
+              <Dashboard />
             }
           />
 
           <Route
             path="/study-plan"
             element={
-              <PrivateRoute>
-                <StudyPlan />
-              </PrivateRoute>
+              <StudyPlan />
             }
           />
 
           <Route
             path="/ai-tutor"
             element={
-              <PrivateRoute>
-                <AITutor />
-              </PrivateRoute>
+              <AITutor />
             }
           />
-
         </Routes>
-
       </main>
     </div>
   );
