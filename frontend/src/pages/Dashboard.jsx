@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../api/quiz";
 import { getUserId } from "../utils/user";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+
+  const navigate = useNavigate();
+
   const [dashboard, setDashboard] = useState(null);
 
   useEffect(() => {
@@ -390,6 +394,7 @@ export default function Dashboard() {
             </p>
 
             <button
+            onClick={() => navigate("/quiz/setup")}
               className="mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-lg"
             >
               🚀 Take Another Quiz
