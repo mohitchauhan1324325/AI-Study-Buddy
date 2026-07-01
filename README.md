@@ -206,17 +206,6 @@ VITE_API_URL=http://localhost:5000
 
 ---
 
-# 📸 Screenshots
-
-- Home Page
-- AI Quiz
-- Quiz Result
-- Dashboard
-- AI Tutor
-- Study Plan
-
----
-
 # 🚀 Deployment
 
 Frontend
